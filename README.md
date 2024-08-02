@@ -35,11 +35,15 @@ product_categorization/
 │   └── main.py
 │
 └── tests/
-    ├── __init__.py
-    ├── test_product_category.py
-    ├── test_analog_camera.py
-    ├── test_generic_product.py
-    └── test_factory.py
+│   ├── __init__.py
+│   ├── test_product_category.py
+│   ├── test_analog_camera.py
+│   ├── test_generic_product.py
+│   └── test_factory.py
+│
+├── README.txt
+└── requirements.txt
+
 ```
 
 ### Key Components
