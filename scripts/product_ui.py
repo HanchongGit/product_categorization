@@ -2,47 +2,78 @@ import customtkinter as ctk
 from tkinter import filedialog, messagebox
 import pandas as pd
 from product_category import create_product
-
-print("Starting the application...")
-
 class ProductApp(ctk.CTk):
     def __init__(self):
         super().__init__()
-
         self.title("Product Categorization System")
-        self.geometry("600x400")
+        self.geometry("1000x500")
 
-        # Labels and entries
-        self.sap_label = ctk.CTkLabel(self, text="SAP Code:")
-        self.sap_label.pack(pady=(20, 5))
+        # Configure grid layout
+        self.grid_columnconfigure((1,2), weight=0)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=0)
+        self.grid_rowconfigure((1), weight=1)
 
-        self.sap_code_entry = ctk.CTkEntry(self)
-        self.sap_code_entry.pack(pady=5)
+        self.entry_frame = ctk.CTkFrame(self)
+        self.entry_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+        self.entry_frame.grid_columnconfigure((0,1), weight=1)
+        self.entry_frame.grid_rowconfigure((0,1), weight=1)
+        
+        # SAP Code and Model Name entries
+        ctk.CTkLabel(self.entry_frame, text="SAP Code:").grid(row=0, column=0, sticky="nse", padx=10, pady=10)
+        self.sap_code_entry = ctk.CTkEntry(self.entry_frame, placeholder_text="Enter SAP Code")
+        self.sap_code_entry.grid(row=0, column=1, sticky="nsew", padx=10, pady=20)
 
-        self.model_label = ctk.CTkLabel(self, text="Model Name:")
-        self.model_label.pack(pady=5)
-
-        self.model_name_entry = ctk.CTkEntry(self)
-        self.model_name_entry.pack(pady=5)
+        ctk.CTkLabel(self.entry_frame, text="Model Name:").grid(row=1, column=0, sticky="nse", padx=10, pady=10)
+        self.model_name_entry = ctk.CTkEntry(self.entry_frame, placeholder_text="Enter Model Name")
+        self.model_name_entry.grid(row=1, column=1, sticky="nsew", padx=10, pady=20)
+        
+        self.categorize_frame = ctk.CTkFrame(self)
+        self.categorize_frame.grid(row=0, column=2, padx=10, pady=(10,5), sticky="nsew")
+        self.categorize_frame.grid_columnconfigure((0,1), weight=1)
+        self.categorize_frame.grid_rowconfigure(0, weight=1)
 
         # Button to categorize product
-        self.categorize_button = ctk.CTkButton(self, text="Categorize Product", command=self.categorize_product)
-        self.categorize_button.pack(pady=10)
+        self.categorize_button = ctk.CTkButton(self.categorize_frame, text="Categorize Product", command=self.categorize_product)
+        self.categorize_button.grid(row=0, column=0, padx=(20,10), pady=20, sticky="nsew")
+        
+        self.clear_button = ctk.CTkButton(self.categorize_frame, text="Clear Inputs", command=self.clear_inputs)
+        self.clear_button.grid(row=0, column=1, padx=(10,20), pady=20, sticky="nsew")
 
-        # Text box for displaying features
-        self.result_text = ctk.CTkTextbox(self, width=400, height=100)
-        self.result_text.pack(pady=10)
+        # Scrolled Text Box for displaying features with a scrollbar
+        self.result_text = ctk.CTkTextbox(self)
+        self.result_text.grid(row=1, column=1, columnspan=2, padx=10, pady=(5,10), sticky="nsew")
+        
+        self.file_frame = ctk.CTkFrame(self, width=300)
+        self.file_frame.grid(row=0, column=0, rowspan=2, padx=10, pady=(10,10), sticky="nsew")
+        self.file_frame.grid_columnconfigure(0, weight=1)
+        self.file_frame.grid_rowconfigure((0,1,2), weight=1)
+        
+        self.logo_label = ctk.CTkLabel(self.file_frame, text="Hikvision", font=ctk.CTkFont(size=20, weight="bold"))
+        self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
 
-        # Button to process a CSV or Excel file
-        self.file_button = ctk.CTkButton(self, text="Process CSV/XLSX File", command=self.process_file)
-        self.file_button.pack(pady=10)
+        # Buttons for file operations
+        self.file_button = ctk.CTkButton(self.file_frame, text="Process CSV/XLSX File", command=self.process_file)
+        self.file_button.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
-        # Button to save the modified file
-        self.save_button = ctk.CTkButton(self, text="Save Modified File", command=self.save_file)
-        self.save_button.pack(pady=10)
-
+        self.save_button = ctk.CTkButton(self.file_frame, text="Save Modified File", command=self.save_file)
+        self.save_button.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+        
         # Store the last processed dataframe
         self.processed_df = None
+        
+    def clear_inputs(self):
+        # Clear the content of the SAP Code entry field
+        self.sap_code_entry.delete(0, 'end')
+        self.sap_code_entry.insert(0, "")
+
+        # Clear the content of the Model Name entry field
+        self.model_name_entry.delete(0, 'end')
+        self.model_name_entry.insert(0, "")
+
+        # Clear the ScrolledText widget
+        self.result_text.delete("1.0", "end")
+
 
     def categorize_product(self):
         sap_code = self.sap_code_entry.get()
@@ -144,7 +175,7 @@ class ProductApp(ctk.CTk):
             messagebox.showerror("Save Error", f"An error occurred while saving: {e}")
 
 def main():
-    ctk.set_appearance_mode("light")  # Use "dark" for dark mode
+    ctk.set_appearance_mode("dark")
     app = ProductApp()
     app.mainloop()
 

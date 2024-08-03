@@ -31,9 +31,11 @@ def create_product(sap_code, model_name):
     """
     # Ensure the database is loaded before creating a product
     load_product_database()
+    
+    product = Product(sap_code, model_name)
 
     # Check criteria for Analog_Camera
-    if model_name.startswith('DS-2C') or model_name.startswith('HWT-') or model_name.startswith('THC-'):
+    if product.model_name.startswith('DS-2C') or product.model_name.startswith('HWT-') or product.model_name.startswith('THC-'):
         return Analog_Camera(sap_code, model_name)
 
     # Add additional criteria here for other subclasses
@@ -42,4 +44,4 @@ def create_product(sap_code, model_name):
     #     return SpecificProductSubclass(sap_code, model_name)
 
     # Default to Generic_Product if no specific subclass criteria are met
-    # return Other_Product(sap_code, model_name)
+    return product

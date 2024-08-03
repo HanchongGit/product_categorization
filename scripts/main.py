@@ -3,7 +3,7 @@ from product_category import create_product
 def main():
     # Example product creation
     products_to_create = [
-        ("102202581", "DS-2CE16D8T-IT3(3.6mm)(O-STD)"),
+        ("300508317", "DS-2CE16D8T-IT3(3.6mm)(O-STD)"),
         ("202002308", "K3G501-C"),
         ("123456789", "XYZ-Model")
     ]
