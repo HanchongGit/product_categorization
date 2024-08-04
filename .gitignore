@@ -113,3 +113,7 @@ archive/
 
 # Ignore the sqlite3 db
 database/product_features.db
+
+# Excel and CSV files
+*.xlsx
+*.csv

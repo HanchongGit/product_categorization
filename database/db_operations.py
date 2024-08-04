@@ -106,30 +106,7 @@ def load_data_to_table(db_path, data_folder, table_name, overwrite=False, archiv
 
     if overwrite:
         cursor.execute(f'DROP TABLE IF EXISTS {table_name}')
-        if table_name == 'sap_model_only':
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS sap_model_only (
-                    sap_code INTEGER PRIMARY KEY,
-                    model_name TEXT NOT NULL
-                );
-            ''')
-        elif table_name == 'feature_db':
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS feature_db (
-                    sap_code INTEGER PRIMARY KEY,
-                    model_name TEXT NOT NULL,
-                    feature1 TEXT,
-                    feature2 TEXT,
-                    feature3 TEXT,
-                    feature4 TEXT,
-                    feature5 TEXT,
-                    feature6 TEXT,
-                    feature7 TEXT,
-                    feature8 TEXT,
-                    feature9 TEXT,
-                    feature10 TEXT
-                );
-            ''')
+        initialize_database(db_path)
 
     for file in os.listdir(data_folder):
         file_path = os.path.join(data_folder, file)

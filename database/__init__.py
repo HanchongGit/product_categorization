@@ -18,6 +18,10 @@ DB_PATH = 'database/product_features.db'
 
 def automatically_load_data():
     """Automatically load data from available CSV or XLSX files in the data folder."""
+    if not os.path.exists(DB_PATH):
+        initialize_database(DB_PATH)
+        print(f"Initialized database at {DB_PATH}.")
+    
     if any(file.endswith(('.csv', '.xlsx')) for file in os.listdir(DATA_FOLDER)):
         try:
             load_data_to_table(DB_PATH, DATA_FOLDER, 'feature_db', archive_folder=ARCHIVE_FOLDER)
