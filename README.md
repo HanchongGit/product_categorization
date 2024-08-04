@@ -57,21 +57,33 @@ python -m scripts.product_ui
 
 ```
 product_categorization/
-├── archive/                   # Contains archived Excel files
-├── database/                  # Database scripts and files
+│
+├── database/               # Database scripts and files
 │   ├── __init__.py
-│   ├── db_operations.py
-│   └── product_features.db
-├── product_category/          # Product categorization logic
-│   ├── analog_camera.py
-│   ├── base_product.py
-│   ├── generic_product.py
-│   └── product_factory.py
-├── scripts/                   # Main scripts for running the application
-│   ├── main.py
-│   └── product_ui.py
-├── tests/                     # Unit tests for the application
-└── requirements.txt           # Project dependencies
+│   ├── db_operations.py    # Database operations
+│   └── product_features.db # SQLite database file
+├── archive/                   # Contains archived Excel files
+│
+├── product_category/       # Product categorization logic
+│   ├── __init__.py         # Package initialization
+│   ├── analog_camera.py    # Analog camera subclass
+│   ├── base_product.py     # Base class for products
+│   ├── generic_product.py  # Generic product subclass
+│   ├── product_factory.py  # Factory function to create product instances
+│   └── new_category.py     # Placeholder for new category subclass
+│
+├── scripts/                # Main scripts for running the application
+│   ├── main.py             # Main script to run the application
+│   └── product_ui.py       # Script for running the GUI
+│
+├── tests/                  # Unit tests for the application
+│   ├── test_main.py        # Tests for main script
+│   └── test_product_category.py # Tests for product categories
+│
+├── requirements.txt        # Python dependencies
+├── README.md               # Project documentation
+├── .gitignore              # Git ignore file
+└── prompt_template.txt     # Structured prompt template for generating project guidance
 ```
 
 ## Features
@@ -109,20 +121,148 @@ Contributions are welcome! If you have ideas or enhancements, feel free to fork 
    ```
 5. **Open a Pull Request**: Navigate to the original repository and click the "Compare & pull request" button.
 
-### Adding New Categorization Rules
+### ChatGPT Prompt Template
 
-If you want to add new categorization rules, please work under the `product_category` module. Specifically:
+`prompt_template.txt` contains a structured prompt template used to generate guidance and detailed instructions for interacting with the product_categorization repository. It can be used by users to get comprehensive insights and help for understanding and modifying the repository's code and structure.
 
-- **Add New Classes or Methods**: Implement new categorization logic by creating new classes or extending existing ones like `analog_camera.py` or `generic_product.py`.
-- **Document Your Changes**: Clearly comment your code and update any relevant documentation to explain your categorization logic.
+### Step-by-Step Guide to Adding a New Product Class
 
-### Designing Tests
+1. **Create a New File for the Category**
 
-Design tests under the `tests` directory to ensure your new categorization rules function as expected:
+   Navigate to the `product_category` directory and create a new Python file for your category. For a "Digital Camera" category, create a file named `digital_camera.py`:
 
-- **Create New Test Files**: Add test files corresponding to your new categories, such as `test_new_category.py`.
-- **Use Pytest**: Structure your tests using the `pytest` framework to maintain consistency with existing tests.
-- **Test Cases**: Cover edge cases, typical use cases, and any potential failure modes. Ensure tests are comprehensive.
+   ```bash
+   product_categorization/product_category/digital_camera.py
+   ```
+
+2. **Define the New Subclass**
+
+   In `digital_camera.py`, define a class that inherits from `Product`. Implement initialization and feature extraction specific to this category.
+
+   ```python
+   # digital_camera.py
+
+   from .base_product import Product
+
+   class DigitalCamera(Product):
+       """
+       Class for products in the Digital Camera line.
+       """
+
+       def __init__(self, sap_code, model_name):
+           super().__init__(sap_code, model_name)
+
+           self.class_name = 'Digital Camera'
+           self.class_num = '04'  # Assign a unique class number
+
+           # Example: Extract model details and features specific to digital cameras
+           if self.model_name.startswith('DC-'):
+               self.brandline = 'Canon'
+               self._process_model(5)
+               self.extract_features_canon()
+
+       def extract_features_canon(self):
+           """
+           Extract features specific to Canon Digital Cameras.
+           """
+           # Implement feature extraction logic for Canon digital cameras
+           self.feature1 = self.body[2] + ' MP'
+           self.feature2 = 'Optical Zoom' if 'OZ' in self.model_name else 'Digital Zoom'
+           self.feature3 = self.extract_feature_focal_length()
+
+       def extract_feature_focal_length(self):
+           """
+           Example method to extract focal length feature.
+           """
+           # Dummy implementation
+           return '35-105mm' if '35' in self.model_name else '28-80mm'
+   ```
+
+   - **Initialization**: Initialize the subclass with a constructor that calls the parent class (`Product`) constructor.
+   - **Feature Extraction**: Implement methods to extract and process features unique to the category.
+
+3. **Update the Factory Function**
+
+   Integrate the new subclass into the factory function to create instances of the new product type when appropriate conditions are met.
+
+   Edit `product_factory.py` to include the new class:
+
+   ```python
+   # product_factory.py
+
+   from .base_product import Product
+   from .analog_camera import Analog_Camera
+   from .generic_product import Generic_Product
+   from .digital_camera import DigitalCamera  # Import the new category
+
+   def create_product(sap_code, model_name):
+       """
+       Factory function to create a product instance based on criteria.
+       """
+
+       product = Product(sap_code, model_name)
+
+       # Check criteria for Analog_Camera
+       if product.model_name.startswith('DS-2C') or product.model_name.startswith('HWT-') or product.model_name.startswith('THC-'):
+           return Analog_Camera(sap_code, model_name)
+
+       # Check criteria for DigitalCamera
+       if product.model_name.startswith('DC-'):
+           return DigitalCamera(sap_code, model_name)
+
+       # Default to Generic_Product if no specific subclass criteria are met
+       return Generic_Product(sap_code, model_name)
+   ```
+
+   - **Factory Logic**: Add a condition that checks the model name or other criteria to determine when to instantiate the `DigitalCamera` class.
+
+4. **Update `__init__.py`**
+
+   Add the new subclass to the `__init__.py` file so it can be easily imported from the `product_category` module:
+
+   ```python
+   # product_category/__init__.py
+
+   from .base_product import Product
+   from .analog_camera import Analog_Camera
+   from .generic_product import Generic_Product
+   from .digital_camera import DigitalCamera  # Import the new category
+   from .product_factory import create_product
+
+   __all__ = ['Product', 'Analog_Camera', 'Generic_Product', 'DigitalCamera', 'create_product']
+   ```
+
+5. **Test the New Class**
+
+   Create tests to ensure your new category class functions as expected. Add tests in `tests/test_product_category.py`:
+
+   ```python
+   # tests/test_product_category.py
+
+   import pytest
+   from product_category.digital_camera import DigitalCamera
+
+   def test_digital_camera_initialization():
+       dc = DigitalCamera('12345', 'DC-CanonX-35')
+       assert dc.class_name == 'Digital Camera'
+       assert dc.class_num == '04'
+       assert dc.feature1 == 'X MP'  # Replace X with expected value
+       assert dc.feature2 == 'Optical Zoom'
+       assert dc.feature3 == '35-105mm'
+   ```
+
+   - **Test Initialization**: Verify that the class initializes correctly with the proper attributes.
+   - **Test Feature Extraction**: Ensure that features are correctly extracted based on the model details.
+
+6. **Run Tests**
+
+   Run the tests to ensure that everything is working as expected:
+
+   ```bash
+   pytest tests
+   ```
+
+   Ensure all tests pass and that your new category class integrates smoothly with the existing system.
 
 ### Guidelines
 

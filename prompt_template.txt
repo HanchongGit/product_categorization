@@ -1,0 +1,44 @@
+ChatGPT Agent: Chat with Code | Repo Assistant for Githu b // https://chatgpt.com/g/g-QA3Dl6r3G-chat-with-code-repo-assistant-for-githu-b
+
+---
+
+## Prompt
+
+I want to analyze and improve the `product_categorization` repository: https://github.com/HanchongGit/product_categorization. Please help me learn and explain this repository in detail. Additionally, provide guidance on the following:
+
+1. **Repository Overview**:
+   - Explain the purpose and functionality of the repository.
+   - Describe the main features and components.
+
+2. **Repository Structure**:
+   - Provide a detailed breakdown of the directory structure.
+   - Explain the purpose of each directory and file.
+
+3. **Installation Instructions**:
+   - List the steps to set up the project locally, including dependency installation.
+
+4. **Usage Instructions**:
+   - Provide instructions on how to run the main application and any associated scripts.
+
+5. **Code Analysis**:
+   - Analyze the `product_category` module in depth.
+   - Explain the functionality of each class and how they interact.
+
+6. **Improving the README**:
+   - Provide a detailed and improved version of the `README.md` file.
+
+7. **Adding a New Product Category**:
+   - Guide me through the process of adding a new category as a subclass of `Product`.
+   - Include steps for creating a new file, defining the subclass, and integrating it with existing code.
+
+8. **Testing**:
+   - Explain how to run tests for the repository and the importance of testing.
+
+9. **Contributing Guidelines**:
+   - Provide instructions for contributing to the repository, including best practices and coding standards.
+
+10. **General Guidelines**:
+    - Offer any additional guidelines for maintaining and extending the repository.
+
+---
+

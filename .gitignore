@@ -110,3 +110,6 @@ Desktop.ini
 
 # Ignore the archive directory and its contents
 archive/
+
+# Ignore the sqlite3 db
+database/product_features.db
