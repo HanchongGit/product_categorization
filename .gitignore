@@ -108,3 +108,5 @@ Desktop.ini
 # Git itself
 .git/
 
+# Ignore the archive directory and its contents
+archive/

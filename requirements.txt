@@ -1,3 +1,16 @@
-pandas>=1.0
-pytest>=6.0
-customtkinter
+# Core dependencies
+pandas>=1.0  # Handles data manipulation and analysis
+
+# Testing dependencies
+pytest>=6.0  # Framework for writing simple and scalable test cases
+
+# GUI components
+customtkinter  # Library for modern tkinter widgets
+
+# Excel file handling
+openpyxl>=3.1  # Required for reading Excel .xlsx files
+# xlrd is typically no longer needed for .xlsx files as it's primarily for .xls files,
+# if you need .xls support, ensure it's included:
+# xlrd>=2.0
+
+

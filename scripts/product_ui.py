@@ -97,6 +97,10 @@ class ProductApp(ctk.CTk):
             f"Feature 4: {product.feature4}\n"
             f"Feature 5: {product.feature5}\n"
             f"Feature 6: {product.feature6}\n"
+            f"Feature 7: {product.feature7}\n"
+            f"Feature 8: {product.feature8}\n"
+            f"Feature 9: {product.feature9}\n"
+            f"Feature 10: {product.feature10}\n"
         )
         self.result_text.delete("1.0", ctk.END)
         self.result_text.insert(ctk.END, features)
@@ -131,6 +135,10 @@ class ProductApp(ctk.CTk):
             df['Feature 4'] = ''
             df['Feature 5'] = ''
             df['Feature 6'] = ''
+            df['Feature 7'] = ''
+            df['Feature 8'] = ''
+            df['Feature 9'] = ''
+            df['Feature 10'] = ''
 
             for index, row in df.iterrows():
                 product = create_product(row['SAP Code'], row['Model Name'])
@@ -144,6 +152,10 @@ class ProductApp(ctk.CTk):
                 df.at[index, 'Feature 4'] = product.feature4
                 df.at[index, 'Feature 5'] = product.feature5
                 df.at[index, 'Feature 6'] = product.feature6
+                df.at[index, 'Feature 7'] = product.feature7
+                df.at[index, 'Feature 8'] = product.feature8
+                df.at[index, 'Feature 9'] = product.feature9
+                df.at[index, 'Feature 10'] = product.feature10
 
             self.processed_df = df
             messagebox.showinfo("Process Complete", "File processed successfully. You can now save the modified file.")
