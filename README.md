@@ -1,130 +1,133 @@
-# Product Categorization System
+# Product Categorization
 
-The Product Categorization System is a Python-based application designed to categorize and manage product data efficiently.
+This project is designed to categorize products based on their features and specifications. It utilizes a database to store product data and a factory pattern for creating product objects. 
 
 ## Table of Contents
 
-- [Project Structure](#project-structure)
-- [Setup and Installation](#setup-and-installation)
+- [Installation](#installation)
 - [Usage](#usage)
+- [Directory Structure](#directory-structure)
+- [Features](#features)
 - [Testing](#testing)
 - [Contributing](#contributing)
 
-## Project Structure
+## Installation
 
-```
-product_categorization/
-│
-├── product_category/
-│   ├── __init__.py
-│   ├── base_product.py
-│   ├── analog_camera.py
-│   ├── generic_product.py
-│   ├── product_factory.py
-│   └── utils.py
-│
-├── database/
-│   ├── __init__.py
-│   ├── loader.py
-│   └── data_files/
-│       ├── products.csv
-│       └── products.xlsx
-│
-├── scripts/
-│   ├── __init__.py
-│   └── main.py
-│
-└── tests/
-│   ├── __init__.py
-│   ├── test_product_category.py
-│   ├── test_analog_camera.py
-│   ├── test_generic_product.py
-│   └── test_factory.py
-│
-├── README.txt
-└── requirements.txt
+To set up the project on your local machine, follow these steps:
 
-```
+1. **Clone the Repository**:
 
-### Key Components
+    ```bash
+    git clone https://github.com/your-username/product-categorization.git
+    cd product-categorization
+    ```
 
-- **`product_category/`**: Contains the core classes for managing products, including the base `Product` class, specific product types (e.g.`Analog_Camera`, `Generic_Product`), and the factory for creating product instances.
+2. **Create a Virtual Environment** (Optional but recommended):
 
-- **`database/`**: Manages loading product data from CSV and Excel files. The `data_files/` directory holds database file for (SAP Code)-(Model Name) mapping.
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+    ```
 
-- **`scripts/`**: Contains executable scripts, such as `main.py`, which demonstrates how to use the product categorization system.
+3. **Install Dependencies**:
 
-- **`tests/`**: Includes unit tests for each component of the system, ensuring reliability and correctness.
+    Make sure you have all necessary packages installed. You can do this by using:
 
-## Setup and Installation
-
-### Prerequisites
-
-- Python 3.6 or later
-- `pip` (Python package manager)
-
-### Installation
-
-1. **Clone the Repository**
-
-   ```bash
-   git clone https://github.com/yourusername/product_categorization.git
-   cd product_categorization
-   ```
-
-2. **Create a Virtual Environment** 
-
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts ctivate`
-   ```
-
-3. **Install Dependencies**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 ## Usage
 
-1. **Run the Main Script**
+### Running the Application
 
-   Navigate to the project root and execute the main script using Python:
+You can run the main application script to experiment with the product categorization application:
 
-   ```bash
-   python -m scripts.main
-   ```
+```bash
+python -m scripts.main
+```
+To run the GUI interface, use:
 
-2. **Add New Products**
+```bash
+python -m scripts.product_ui
+```
 
-   Modify the CSV or Excel files in the `database/data_files/` directory to include new products. The system automatically loads these files upon execution.
 
-3. **Extend Functionality**
+## Directory Structure
 
-   To add new product types, create a new subclass in the `product_category` directory and update the factory function in `product_factory.py`.
+```
+product_categorization/
+├── archive/                   # Contains archived Excel files
+├── database/                  # Database scripts and files
+│   ├── __init__.py
+│   ├── db_operations.py
+│   └── product_features.db
+├── product_category/          # Product categorization logic
+│   ├── analog_camera.py
+│   ├── base_product.py
+│   ├── generic_product.py
+│   └── product_factory.py
+├── scripts/                   # Main scripts for running the application
+│   ├── main.py
+│   └── product_ui.py
+├── tests/                     # Unit tests for the application
+└── requirements.txt           # Project dependencies
+```
+
+## Features
+
+- **Product Categorization**: Categorizes products based on features using a factory pattern.
+- **Database Integration**: Uses SQLite for data storage and retrieval.
+- **Excel File Handling**: Imports product data from Excel files.
 
 ## Testing
 
-1. **Run Tests**
+Unit tests are provided for the main components of the application. To run the tests, use:
 
-   Use `pytest` to run all unit tests in the `tests` directory:
+```bash
+pytest tests
+```
 
-   ```bash
-   pytest tests
-   ```
-
-2. **Add New Tests**
-
-   Create new test files or extend existing ones to cover additional functionality or edge cases.
+Ensure that you have installed `pytest` by checking the `requirements.txt`.
 
 ## Contributing
 
-Contributions are welcome! Please follow these steps to contribute:
+Contributions are welcome! If you have ideas or enhancements, feel free to fork the repository and submit a pull request.
 
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/YourFeature`).
-3. Make your changes and commit them (`git commit -m 'Add some feature'`).
-4. Push to the branch (`git push origin feature/YourFeature`).
-5. Open a pull request.
+1. **Fork the Project**: Click the "Fork" button at the top right of the repository page on GitHub.
+2. **Create Your Feature Branch**: 
+   ```bash
+   git checkout -b feature/new-feature
+   ```
+3. **Commit Your Changes**: Ensure your commit messages are clear and descriptive.
+   ```bash
+   git commit -am 'Add new feature'
+   ```
+4. **Push to the Branch**:
+   ```bash
+   git push origin feature/new-feature
+   ```
+5. **Open a Pull Request**: Navigate to the original repository and click the "Compare & pull request" button.
 
+### Adding New Categorization Rules
+
+If you want to add new categorization rules, please work under the `product_category` module. Specifically:
+
+- **Add New Classes or Methods**: Implement new categorization logic by creating new classes or extending existing ones like `analog_camera.py` or `generic_product.py`.
+- **Document Your Changes**: Clearly comment your code and update any relevant documentation to explain your categorization logic.
+
+### Designing Tests
+
+Design tests under the `tests` directory to ensure your new categorization rules function as expected:
+
+- **Create New Test Files**: Add test files corresponding to your new categories, such as `test_new_category.py`.
+- **Use Pytest**: Structure your tests using the `pytest` framework to maintain consistency with existing tests.
+- **Test Cases**: Cover edge cases, typical use cases, and any potential failure modes. Ensure tests are comprehensive.
+
+### Guidelines
+
+- Follow the [PEP 8](https://www.python.org/dev/peps/pep-0008/) style guide for Python code.
+- Ensure all tests pass before submitting a pull request.
+- Provide a detailed description of the changes in your pull request, including any new features or fixes.
+
+Thank you for contributing to the project!
