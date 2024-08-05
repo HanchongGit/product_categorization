@@ -13,6 +13,8 @@ __all__ = [
 ]
 
 DATA_FOLDER = 'database/excel_data_files'
+if not os.path.exists(DATA_FOLDER):
+    os.makedirs(DATA_FOLDER)
 ARCHIVE_FOLDER = 'archive'
 DB_PATH = 'database/product_features.db'
 
