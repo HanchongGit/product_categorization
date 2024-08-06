@@ -26,6 +26,7 @@ def initialize_database(db_path):
         CREATE TABLE IF NOT EXISTS feature_db (
             sap_code INTEGER PRIMARY KEY,
             model_name TEXT NOT NULL,
+            brandline TEXT CHECK(brandline IN ('Hikvision', 'HiLook', 'HiWatch', 'Pyronix')),
             feature1 TEXT,
             feature2 TEXT,
             feature3 TEXT,
@@ -97,7 +98,7 @@ def load_data_to_table(db_path, data_folder, table_name, overwrite=False, archiv
 
     expected_columns = {
         'sap_model_only': ['sap_code', 'model_name'],
-        'feature_db': ['sap_code', 'model_name', 'feature1', 'feature2', 'feature3', 'feature4', 
+        'feature_db': ['sap_code', 'model_name', 'brandline', 'feature1', 'feature2', 'feature3', 'feature4', 
                        'feature5', 'feature6', 'feature7', 'feature8', 'feature9', 'feature10']
     }
     
@@ -122,18 +123,21 @@ def load_data_to_table(db_path, data_folder, table_name, overwrite=False, archiv
 
             for _, row in df.iterrows():
                 if table_name == 'sap_model_only':
-                    cursor.execute('''
-                        INSERT OR REPLACE INTO sap_model_only (sap_code, model_name)
-                        VALUES (?, ?)
-                    ''', (row['SAPCODE'], row['MODELNAME']))
+                    try:
+                        cursor.execute('''
+                            INSERT OR REPLACE INTO sap_model_only (sap_code, model_name)
+                            VALUES (?, ?)
+                        ''', (row['SAPCODE'], row['MODELNAME']))
+                    except sqlite3.IntegrityError as e:
+                        print(f"Error inserting product: {e}")
                 
                 elif table_name == 'feature_db':
                     cursor.execute('''
-                        INSERT OR REPLACE INTO feature_db (sap_code, model_name, feature1, feature2, feature3,
+                        INSERT OR REPLACE INTO feature_db (sap_code, model_name, brandline, feature1, feature2, feature3,
                                                            feature4, feature5, feature6, feature7, feature8,
                                                            feature9, feature10)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    ''', (row['SAPCODE'], row['MODELNAME'], row.get('FEATURE1'), row.get('FEATURE2'), 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ''', (row['SAPCODE'], row['MODELNAME'], row.get('BRANDLINE'), row.get('FEATURE1'), row.get('FEATURE2'), 
                           row.get('FEATURE3'), row.get('FEATURE4'), row.get('FEATURE5'), row.get('FEATURE6'),
                           row.get('FEATURE7'), row.get('FEATURE8'), row.get('FEATURE9'), row.get('FEATURE10')))
             archive_file(file_path, archive_folder)

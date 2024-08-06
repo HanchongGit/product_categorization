@@ -78,6 +78,7 @@ class Product:
 
     def _populate_features(self, product_info):
         """Populate product features from the product information."""
+        self.brandline = product_info.get('brandline')
         self.feature1 = product_info.get('feature1')
         self.feature2 = product_info.get('feature2')
         self.feature3 = product_info.get('feature3')

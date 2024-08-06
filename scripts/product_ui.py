@@ -85,9 +85,10 @@ class ProductApp(ctk.CTk):
         
         product = create_product(sap_code, model_name)
         features = (
-            f"Product categorized as: {product.class_name}\n"
+            f"Product categorized as: {product.class_num}-{product.class_name}\n"
             f"SAP Code: {product.sap_code}\n"
             f"Model Name: {product.model_name}\n"
+            f"Brandline='{product.brandline}',\n"
             f"Body: {product.body}\n"
             f"Anno: {product.anno}\n"
             f"Extn: {product.extn}\n"
@@ -126,6 +127,7 @@ class ProductApp(ctk.CTk):
 
             # Process each row and add features
             df['Class Name'] = ''
+            df['Brandline']= ''
             df['Body'] = ''
             df['Anno'] = ''
             df['Extn'] = ''
@@ -143,6 +145,7 @@ class ProductApp(ctk.CTk):
             for index, row in df.iterrows():
                 product = create_product(row['SAP Code'], row['Model Name'])
                 df.at[index, 'Class Name'] = product.class_name
+                df.at[index, 'Brandline'] = product.brandline
                 df.at[index, 'Body'] = product.body
                 df.at[index, 'Anno'] = product.anno
                 df.at[index, 'Extn'] = product.extn
