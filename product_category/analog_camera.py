@@ -9,7 +9,7 @@ class Analog_Camera(Product):
     def __init__(self, sap_code, model_name):
         super().__init__(sap_code, model_name)
         
-        self.class_name = 'Non-Video'
+        self.class_name = 'Analog Camera'
         self.class_num = Product.class_name_to_num.get(self.class_name, None)
 
         if self.brandline == 'Hikvision' or self.model_name.startswith('DS-2C'):
