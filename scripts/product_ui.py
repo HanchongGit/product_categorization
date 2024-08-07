@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
 import pandas as pd
+import re
 from product_category import create_product
 class ProductApp(ctk.CTk):
     def __init__(self):
@@ -76,35 +77,47 @@ class ProductApp(ctk.CTk):
 
 
     def categorize_product(self):
-        sap_code = self.sap_code_entry.get()
+        sap_codes = self.sap_code_entry.get()
         model_name = self.model_name_entry.get()
-        
-        if not sap_code and not model_name:
-            messagebox.showwarning("Input Error", "Please enter at least SAP Code or Model Name.")
+
+        if not sap_codes and not model_name:
+            messagebox.showwarning("Input Error", "Please enter at least SAP Code(s) or Model Name.")
             return
-        
-        product = create_product(sap_code, model_name)
-        features = (
-            f"Product categorized as: {product.class_num}-{product.class_name}\n"
-            f"SAP Code: {product.sap_code}\n"
-            f"Model Name: {product.model_name}\n"
-            f"Brandline='{product.brandline}',\n"
-            f"Body: {product.body}\n"
-            f"Anno: {product.anno}\n"
-            f"Extn: {product.extn}\n"
-            f"Feature 1: {product.feature1}\n"
-            f"Feature 2: {product.feature2}\n"
-            f"Feature 3: {product.feature3}\n"
-            f"Feature 4: {product.feature4}\n"
-            f"Feature 5: {product.feature5}\n"
-            f"Feature 6: {product.feature6}\n"
-            f"Feature 7: {product.feature7}\n"
-            f"Feature 8: {product.feature8}\n"
-            f"Feature 9: {product.feature9}\n"
-            f"Feature 10: {product.feature10}\n"
-        )
+
+        sap_code_list = [code.strip() for code in re.split(r'[^0-9]', sap_codes) if code.strip()]
+
+        results = []
+        for sap_code in sap_code_list:
+            product = create_product(sap_code, model_name)
+            
+            # Check if the product was successfully created before appending its details
+            if product:
+                features = (
+                    f"Product categorized as: {product.class_num}-{product.class_name}\n"
+                    f"SAP Code: {product.sap_code}\n"
+                    f"Model Name: {product.model_name}\n"
+                    f"Brandline='{product.brandline}',\n"
+                    f"Body: {product.body}\n"
+                    f"Anno: {product.anno}\n"
+                    f"Extn: {product.extn}\n"
+                    f"Feature 1: {product.feature1}\n"
+                    f"Feature 2: {product.feature2}\n"
+                    f"Feature 3: {product.feature3}\n"
+                    f"Feature 4: {product.feature4}\n"
+                    f"Feature 5: {product.feature5}\n"
+                    f"Feature 6: {product.feature6}\n"
+                    f"Feature 7: {product.feature7}\n"
+                    f"Feature 8: {product.feature8}\n"
+                    f"Feature 9: {product.feature9}\n"
+                    f"Feature 10: {product.feature10}\n"
+                )
+                results.append(features)
+            else:
+                results.append(f"Could not categorize product with SAP Code: {sap_code}\n")
+
+        # Display results
         self.result_text.delete("1.0", ctk.END)
-        self.result_text.insert(ctk.END, features)
+        self.result_text.insert(ctk.END, "\n".join(results))
 
     def process_file(self):
         file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx")])
@@ -126,7 +139,7 @@ class ProductApp(ctk.CTk):
                 return
 
             # Process each row and add features
-            df['Class Name'] = ''
+            df['Product Class'] = ''
             df['Brandline']= ''
             df['Body'] = ''
             df['Anno'] = ''
@@ -144,7 +157,7 @@ class ProductApp(ctk.CTk):
 
             for index, row in df.iterrows():
                 product = create_product(row['SAP Code'], row['Model Name'])
-                df.at[index, 'Class Name'] = product.class_name
+                df.at[index, 'Product Class'] = product.class_num + "-" + product.class_name
                 df.at[index, 'Brandline'] = product.brandline
                 df.at[index, 'Body'] = product.body
                 df.at[index, 'Anno'] = product.anno

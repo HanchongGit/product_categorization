@@ -1,5 +1,6 @@
 import re
 import pandas as pd
+import fnmatch
 from database import load_data_from_sql_table
 
 class Product:
@@ -10,6 +11,25 @@ class Product:
     # Class variable to store the product database as a DataFrame
     product_df = None
     database_loaded = False
+    class_name_to_num = {
+    'IPC': '01',
+    'NVR': '02',
+    'Analog Camera': '03',
+    'DVR': '04',
+    'PTZ': '05',
+    'Monitor & Cables': '06',
+    'HDD': '08',
+    'Non-Video': '09',
+    'Networking': '11',
+    'Bracket & Housing': '12',
+    'Others': '13',
+    'ITS & Mobile': '14',
+    'Software': '15',
+    'Thermal': '16',
+    'LED Display, DS': '17',
+    'Audio': '18'
+}
+
 
     def __init__(self, sap_code, model_name):
         self.sap_code = str(sap_code).strip() if sap_code else None
@@ -19,8 +39,8 @@ class Product:
         if not self.sap_code and not self.model_name:
             raise ValueError("Product must have either a SAP code or a model name.")
         
-        self.class_name = 'Product'  # Default class name
-        self.class_num = 'HIK'  # Default class number
+        self.class_name = None
+        self.class_num = None
 
         self.brandline = None
         self.body = None
@@ -78,6 +98,8 @@ class Product:
 
     def _populate_features(self, product_info):
         """Populate product features from the product information."""
+        self.class_name = product_info.get('class_name')
+        self.class_num = Product.class_name_to_num.get(self.class_name, None)
         self.brandline = product_info.get('brandline')
         self.feature1 = product_info.get('feature1')
         self.feature2 = product_info.get('feature2')
@@ -111,7 +133,7 @@ class Product:
 
     def __repr__(self):
         return (
-            f"{self.class_num}-{self.class_name}(\n"
+            f"{self.class_num or 'HIK'}-{self.class_name or 'Unknown Class'}(\n"
             f"  model_name='{self.model_name or 'Unknown Model'}',\n"
             f"  sap_code='{self.sap_code or 'Unknown SAP'}',\n"
             f"  brandline='{self.brandline}',\n"
@@ -149,3 +171,7 @@ class Product:
         Extracts the SHL (Smart Hybrid Light) feature.
         """
         return 'SHL' if 'L' in self.anno else 'No SHL'
+    
+    def _matches_any(self, pattern_list):
+        """Helper function to check if model_name matches any pattern."""
+        return any(fnmatch.fnmatch(self.model_name, pattern) for pattern in pattern_list)

@@ -9,20 +9,20 @@ class Analog_Camera(Product):
     def __init__(self, sap_code, model_name):
         super().__init__(sap_code, model_name)
         
-        self.class_name = 'Analog Camera'
-        self.class_num = '03'
+        self.class_name = 'Non-Video'
+        self.class_num = Product.class_name_to_num.get(self.class_name, None)
 
-        if self.model_name.startswith('DS-2C'):
+        if self.brandline == 'Hikvision' or self.model_name.startswith('DS-2C'):
             self.brandline = 'Hikvision'
             self._process_model(5)
             self.extract_features_hikvision()
 
-        elif self.model_name.startswith('HWT-'):
+        elif self.brandline == 'Hiwatch' or self.model_name.startswith('HWT-'):
             self.brandline = 'HiWatch'
             self._process_model(4)
             self.extract_features_hiwatch()
 
-        elif self.model_name.startswith('THC-'):
+        elif self.brandline == 'Hilook' or self.model_name.startswith('THC-'):
             self.brandline = 'HiLook'
             self._process_model(4)
             self.extract_features_hilook()

@@ -26,7 +26,8 @@ def initialize_database(db_path):
         CREATE TABLE IF NOT EXISTS feature_db (
             sap_code INTEGER PRIMARY KEY,
             model_name TEXT NOT NULL,
-            brandline TEXT CHECK(brandline IN ('Hikvision', 'HiLook', 'HiWatch', 'Pyronix')),
+            class_name TEXT CHECK(class_name IN ('IPC', 'NVR', 'Analog Camera', 'DVR', 'PTZ', 'Monitor & Cables', 'HDD', 'Non-Video', 'Networking', 'Bracket & Housing', 'Others', 'ITS & Mobile', 'Software', 'Thermal', 'LED Display, DS', 'Audio') OR class_name IS NULL),
+            brandline TEXT CHECK(brandline IN ('Hikvision', 'Pyronix', 'HiWatch', 'HiLook') OR brandline IS NULL),
             feature1 TEXT,
             feature2 TEXT,
             feature3 TEXT,
@@ -132,14 +133,18 @@ def load_data_to_table(db_path, data_folder, table_name, overwrite=False, archiv
                         print(f"Error inserting product: {e}")
                 
                 elif table_name == 'feature_db':
-                    cursor.execute('''
-                        INSERT OR REPLACE INTO feature_db (sap_code, model_name, brandline, feature1, feature2, feature3,
-                                                           feature4, feature5, feature6, feature7, feature8,
-                                                           feature9, feature10)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    ''', (row['SAPCODE'], row['MODELNAME'], row.get('BRANDLINE'), row.get('FEATURE1'), row.get('FEATURE2'), 
-                          row.get('FEATURE3'), row.get('FEATURE4'), row.get('FEATURE5'), row.get('FEATURE6'),
-                          row.get('FEATURE7'), row.get('FEATURE8'), row.get('FEATURE9'), row.get('FEATURE10')))
+                    try:
+                        cursor.execute('''
+                            INSERT OR REPLACE INTO feature_db (sap_code, model_name, class_name, brandline, feature1, feature2, feature3,
+                                                            feature4, feature5, feature6, feature7, feature8,
+                                                            feature9, feature10)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        ''', (row['SAPCODE'], row['MODELNAME'], row.get('CLASSNAME'),row.get('BRANDLINE'), row.get('FEATURE1'), row.get('FEATURE2'), 
+                            row.get('FEATURE3'), row.get('FEATURE4'), row.get('FEATURE5'), row.get('FEATURE6'),
+                            row.get('FEATURE7'), row.get('FEATURE8'), row.get('FEATURE9'), row.get('FEATURE10')))
+                    except sqlite3.IntegrityError as e:
+                        print(f"Error inserting product: {e}")
+                           
             archive_file(file_path, archive_folder)
             logging.info(f"Successfully processed and archived file: {file_path}")
         

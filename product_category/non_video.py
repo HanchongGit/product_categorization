@@ -1,4 +1,3 @@
-import fnmatch
 from .base_product import Product
 
 class NonVideo(Product):
@@ -6,8 +5,13 @@ class NonVideo(Product):
 
     def __init__(self, sap_code, model_name):
         super().__init__(sap_code, model_name)
+        
+        self.class_name = 'Analog Camera'
+        self.class_num = Product.class_name_to_num.get(self.class_name, None)
 
-        if self._matches_any(["*DS-K*", "*IC S50*", "*ISD-S*", "*NP-S*", "*DS-PEA*"]):
+        if self.brandline == 'Pyronix':
+            self.extract_feature_pyronix()
+        elif self._matches_any(["*DS-K*", "*IC S50*", "*ISD-S*", "*NP-S*", "*DS-PEA*"]):
             self.feature1 = self.categorize_catalog()
             self.feature2 = self.categorize_product_type()
             self.feature3 = self.categorize_product_series()
@@ -16,12 +20,6 @@ class NonVideo(Product):
             self.feature6 = self.categorize_materials()
         elif self._matches_any(["*DS-P*"]):
             self.extract_feature_alarm()
-        elif self.brandline == 'Pyronix':
-            self.extract_feature_pyronix()
-
-    def _matches_any(self, pattern_list):
-        """Helper function to check if model_name matches any pattern."""
-        return any(fnmatch.fnmatch(self.model_name, pattern) for pattern in pattern_list)
 
     def categorize_catalog(self):
         if self._matches_any(["*DS-KA01*", "*DS-KA86*", "*DS-KAB8*", "*DS-KABD*", "*DS-KABH*", "*DS-KABV*", "*DS-KAD*", "*DS-KAW*", "*DS-KD*", "*DS-KH*", "*DS-KM*", "*DS-KIS*", "*DS-KV*", "*DS-KP*", "*DS-KB*", "*DS-PEA*"]):
