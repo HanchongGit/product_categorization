@@ -184,5 +184,19 @@ class NonVideo(Product):
     def extract_feature_alarm(self):
         self.feature1 = "Alarm"
 
+        if self._matches_any(["*DS-PW*"]):
+            self.feature2 = "AX PRO"
+            self.feature3 = "Control Panel & Kits"
+        elif self._matches_any(["*DS-PD*"]):
+            self.feature2 = "AX PRO"
+            self.feature3 = "Detector"
+        elif self._matches_any(["*DS-PK*", "*DS-PKF*", "*DS-PS*", "*DS-PT*", "*DS-PR*", "*DS-PSP*", "*DS-PM*"]):
+            self.feature2 = "AX PRO"
+            self.feature3 = "Wireless Accessory"
+
+        elif self._matches_any(["*DS-PA*"]):
+            self.feature2 = "AX Hybrid PRO"
+            self.feature3 = "Control Panel"
+
     def extract_feature_pyronix(self):
         self.feature1 = "PYRONIX"

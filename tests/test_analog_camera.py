@@ -3,6 +3,7 @@ from product_category.analog_camera import Analog_Camera
 
 def test_hikvision_features():
     product = Analog_Camera('300508317', 'DS-2CE16D8T-IT3(3.6mm)(O-STD)')
+    assert product.brandline == 'Hikvision'
     assert product.feature1 == '2 MP'
     assert product.feature2 == 'D8T'
     assert product.feature3 == 'Pro'
@@ -12,6 +13,7 @@ def test_hikvision_features():
 
 def test_hiwatch_features():
     product = Analog_Camera(None, 'HWT-T129-M(3.6mm)(HIK SPAIN)')
+    assert product.brandline == 'HiWatch'
     assert product.feature1 == '2 MP'
     assert product.feature2 == 'ColorVu'
     assert product.feature3 == 'IR Light'
@@ -21,6 +23,7 @@ def test_hiwatch_features():
 
 def test_hilook_features():
     product = Analog_Camera(None, 'THC-T323-Z(2.7-13.5mm)(HiLook STD)')
+    assert product.brandline == 'HiLook'
     assert product.feature1 == '2 MP'
     assert product.feature2 == 'Basic'
     assert product.feature3 == 'IR Light'
