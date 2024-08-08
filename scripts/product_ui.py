@@ -93,10 +93,10 @@ class ProductApp(ctk.CTk):
             # Check if the product was successfully created before appending its details
             if product:
                 features = (
-                    f"Product categorized as: {product.class_num}-{product.class_name}\n"
-                    f"SAP Code: {product.sap_code}\n"
-                    f"Model Name: {product.model_name}\n"
-                    f"Brandline='{product.brandline}',\n"
+                    f"Product categorized as: {product.class_num or 'HIK'}-{product.class_name or 'Unknown Class'}\n"
+                    f"SAP Code: {product.sap_code or 'Unknown SAP'}\n"
+                    f"Model Name: {product.model_name or 'Unknown Model'}\n"
+                    f"Brandline: {product.brandline}\n"
                     f"Body: {product.body}\n"
                     f"Anno: {product.anno}\n"
                     f"Extn: {product.extn}\n"

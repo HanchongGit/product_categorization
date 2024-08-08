@@ -126,8 +126,10 @@ def load_data_to_table(db_path, data_folder, table_name, overwrite=False, archiv
                 if table_name == 'sap_model_only':
                     try:
                         cursor.execute('''
-                            INSERT OR REPLACE INTO sap_model_only (sap_code, model_name)
+                            INSERT INTO sap_model_only (sap_code, model_name)
                             VALUES (?, ?)
+                            ON CONFLICT(sap_code) DO UPDATE SET
+                                model_name = COALESCE(EXCLUDED.model_name, sap_model_only.model_name)
                         ''', (row['SAPCODE'], row['MODELNAME']))
                     except sqlite3.IntegrityError as e:
                         print(f"Error inserting product: {e}")
@@ -135,11 +137,26 @@ def load_data_to_table(db_path, data_folder, table_name, overwrite=False, archiv
                 elif table_name == 'feature_db':
                     try:
                         cursor.execute('''
-                            INSERT OR REPLACE INTO feature_db (sap_code, model_name, class_name, brandline, feature1, feature2, feature3,
+                            INSERT INTO feature_db (sap_code, model_name, class_name, brandline, feature1, feature2, feature3,
                                                             feature4, feature5, feature6, feature7, feature8,
                                                             feature9, feature10)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                        ''', (row['SAPCODE'], row['MODELNAME'], row.get('CLASSNAME'),row.get('BRANDLINE'), row.get('FEATURE1'), row.get('FEATURE2'), 
+                            ON CONFLICT(sap_code) DO UPDATE SET
+                                model_name = COALESCE(EXCLUDED.model_name, feature_db.model_name),
+                                class_name = COALESCE(EXCLUDED.class_name, feature_db.class_name),
+                                brandline = COALESCE(EXCLUDED.brandline, feature_db.brandline),
+                                feature1 = COALESCE(EXCLUDED.feature1, feature_db.feature1),
+                                feature2 = COALESCE(EXCLUDED.feature2, feature_db.feature2),
+                                feature3 = COALESCE(EXCLUDED.feature3, feature_db.feature3),
+                                feature4 = COALESCE(EXCLUDED.feature4, feature_db.feature4),
+                                feature5 = COALESCE(EXCLUDED.feature5, feature_db.feature5),
+                                feature6 = COALESCE(EXCLUDED.feature6, feature_db.feature6),
+                                feature7 = COALESCE(EXCLUDED.feature7, feature_db.feature7),
+                                feature8 = COALESCE(EXCLUDED.feature8, feature_db.feature8),
+                                feature9 = COALESCE(EXCLUDED.feature9, feature_db.feature9),
+                                feature10 = COALESCE(EXCLUDED.feature10, feature_db.feature10)
+                        ''', (
+                            row['SAPCODE'], row['MODELNAME'], row.get('CLASSNAME'),row.get('BRANDLINE'), row.get('FEATURE1'), row.get('FEATURE2'), 
                             row.get('FEATURE3'), row.get('FEATURE4'), row.get('FEATURE5'), row.get('FEATURE6'),
                             row.get('FEATURE7'), row.get('FEATURE8'), row.get('FEATURE9'), row.get('FEATURE10')))
                     except sqlite3.IntegrityError as e:
